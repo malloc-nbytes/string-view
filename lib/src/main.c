@@ -1,4 +1,5 @@
 #include "../include/sv.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 int main(void) {
@@ -9,4 +10,3 @@ int main(void) {
 
   return 0;
 }
-
