@@ -70,28 +70,22 @@ StringView sv_cstr_tosv(const char *str)
 StringView sv_appendcstr(const StringView *sv, const char *str)
 {
   size_t str_len = strlen(str);
-  size_t total_len = sv->len + str_len;
-
-  char *concat = malloc(total_len + 1);
-
-  (void)memcpy(concat, sv->data, sv->len);
-  (void)memcpy(concat, str, str_len);
-
-  concat[total_len] = '\0';
-  return sv_create(concat);
+  size_t new_len = sv->len + str_len;
+  char *new_str = malloc(new_len + 1);
+  (void)memcpy(new_str, sv->data, sv->len);
+  (void)memcpy(new_str + sv->len, str, str_len);
+  new_str[new_len] = '\0';
+  return sv_create(new_str);
 }
 
 StringView sv_appendsv(const StringView *sv, const StringView *sv2)
 {
-  size_t total_len = sv->len + sv2->len;
-
-  char *concat = malloc(total_len + 1);
-
-  (void)memcpy(concat, sv->data, sv->len);
-  (void)memcpy(concat, sv2->data, sv2->len);
-
-  concat[total_len] = '\0';
-  return sv_create(concat);
+  size_t new_len = sv->len + sv2->len;
+  char *new_str = malloc(new_len + 1);
+  (void)memcpy(new_str, sv->data, sv->len);
+  (void)memcpy(new_str + sv->len, sv2->data, sv2->len);
+  new_str[new_len] = '\0';
+  return sv_create(new_str);
 }
 
 const char *sv_substr(const StringView *sv, const char* target)
