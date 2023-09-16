@@ -51,6 +51,11 @@ const char *sv_tocstr(const StringView *sv)
   return cstr;
 }
 
+StringView sv_cstr_tosv(const char *str)
+{
+  return sv_create(str);
+}
+
 StringView sv_appendcstr(const StringView *sv, const char *str)
 {
   size_t str_len = strlen(str);
