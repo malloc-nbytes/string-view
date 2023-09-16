@@ -5,8 +5,10 @@
 StringView sv_create(const char *str)
 {
   StringView sv;
+  size_t str_len = strlen(str);
   sv.data = str;
-  sv.len = strlen(str);
+  sv.end = &str[str_len];
+  sv.len = str_len;
   return sv;
 }
 
@@ -18,7 +20,7 @@ const char *sv_iter(const StringView *sv)
     pos++;
     return next;
   }
-  return NULL;
+  return sv->end;
 }
 
 size_t sv_len(const StringView *sv)
@@ -26,14 +28,19 @@ size_t sv_len(const StringView *sv)
   return sv->len;
 }
 
-int sv_haschar(const StringView *sv, char c)
+const char *sv_end(const StringView *sv)
+{
+  return sv->end;
+}
+
+const char *sv_findchar(const StringView *sv, char c)
 {
   for (size_t i = 0; i < sv->len; i++) {
     if (sv->data[i] == c) {
-      return 1;
+      return &sv->data[i];
     }
   }
-  return 0;
+  return sv->end;
 }
 
 const char *sv_tocstr(const StringView *sv)
@@ -71,13 +78,18 @@ StringView sv_appendsv(const StringView *sv, const StringView *sv2)
   return sv_create(concat);
 }
 
-size_t sv_substr(const StringView *sv, const StringView *target)
-{
-  for (size_t i = 0; i <= sv->len - target->len; ++i) {
-    if (memcmp(sv->data + i, target->data, target->len) == 0) {
-      return i;
+const char *sv_substr(const StringView *sv, const char* target) {
+  size_t target_len = strlen(target);
+    
+  if (target_len == 0) {
+    return sv->data;
+  }
+
+  for (size_t i = 0; i < sv->len; ++i) {
+    if (strncmp(sv->data + i, target, target_len) == 0) {
+      return &sv->data[i];
     }
   }
-  return sv->len;
-}
 
+  return sv->end;
+}
